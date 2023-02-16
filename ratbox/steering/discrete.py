@@ -44,12 +44,12 @@ class DiscreteModel(SteeringModel):
 
         ## Rotate right
         if action == 0:
-            angle = agent.MANEUVERABILITY * 1
+            angle = agent.discrete_rotation * 1
             dir_vec = agent.dir_vec.rotate(angle)
             new_pos = agent.position
         ## Rotate left
         elif action == 1:
-            angle = agent.MANEUVERABILITY * -1
+            angle = agent.discrete_rotation * -1
             dir_vec = agent.dir_vec.rotate(angle)
             new_pos = agent.position
         ## Move forward

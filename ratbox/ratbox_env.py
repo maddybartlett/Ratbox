@@ -26,7 +26,7 @@ COLORS = {
     "black": np.array([0, 0, 0])
 }
 
-# Map of steering string to model classes
+# Map of steering model strings to model classes
 STEERING = {
     "discrete": DiscreteModel(),
     "compass": CompassModel(),
@@ -45,17 +45,26 @@ DIRECTIONS = [NORTH, SOUTH, EAST, WEST]
 
 ## Create game object
 class WorldObject:
-    ## Store position, sprite, radius and velocity data
+    '''
+    Parent class for objects placed in the environment/world
+    e.g. goal and obstacles like walls
+    Does not include agent object
+    '''
     def __init__(self, position, name=None): 
-
+        ## Initialise position and sprite name (i.e. filename for png image)
         self.position = Vector2(position)
         self.name = name
 
     def draw(self, surface):
+        ## Load sprite and retrieve radius. Do not draw to surface
         self.sprite = load_sprite(self.name)
         self.radius = self.sprite.get_width()/2
 
 class Goal(WorldObject):
+    '''
+    Goal object 
+    Stationary
+    '''
     def __init__(self, position, name='cheese'):
         self.name = name
         self.position = position
@@ -65,14 +74,14 @@ class Goal(WorldObject):
         self.can_overlap = True
 
 class Wall(WorldObject):
+    '''
+    Stationary w x h pixel obstacle in the environment, through which the agent cannot pass
+    '''
     def __init__(self, position, w=10, h=10, name='wall'):
-        '''Each Wall object is a w x h pixel obstacle on the 
-        map which the agent cannot pass through'''
-
-        self.position = position
-        self.sprite=None #set to None to distinguish from Goal and Agent
-        self.w = w #wall width
-        self.h = h #wall height
+        self.position = position # x,y location of the centre of the wall
+        self.sprite=None # set to None to distinguish from Goal and Agent
+        self.w = w # wall width
+        self.h = h # wall height
 
         self.can_overlap = False
 
@@ -80,41 +89,41 @@ class Wall(WorldObject):
 
         ## Create the wall object
         self.rect = pygame.Rect(self.position[0],self.position[1],self.w, self.h)
-        ## Wall will be placed such that it's center = position
+        ## Place wall in world
         self.rect.center = self.position
 
     def draw(self, surface):
-        '''Function for rendering the wall'''
-
         color = COLORS["grey"]
         pygame.draw.rect(surface, color, self.rect)
 
 
 class Agent():
-    def __init__(self, position, facing, speed, steering, rotation = None):
+    '''
+    Mobile Agent object 
+    '''
+    def __init__(self, position, facing, speed, steering, rotation=None, name="rat"):
         self.position = Vector2(position)
         self.steering = steering
-        ## Initialise rat as facing east
+        ## Initialise agent as facing east
         self.dir_vec = Vector2(facing)
         ## Get current direction relative to East
         self.direction = self.dir_vec.angle_to(EAST) #in degrees
 
-        self.MAX_SPEED = speed #pixels per step
-        self.MANEUVERABILITY = rotation
+        self.discrete_rotation = rotation #degrees per turn when using discrete action space
 
         ## record whether agent has bumped into something
         self.collision = False 
         
-        ## steering model
+        ## set steering model (default is discrete)
         if self.steering is None:
             self.steering = 'discrete'  
-        self.travel = STEERING[self.steering]       
+        self.travel = STEERING[self.steering]      
+        
+        self.travel._max_speed = speed #max pixels per step
 
-        ## set object name
-        self.name = "rat"
+        self.name = name
 
     def draw(self, surface):
-        '''function for rendering the agent'''
         self.sprite = load_sprite(self.name)
         self.radius = self.sprite.get_width()/2
 
@@ -186,23 +195,24 @@ class RatBoxEnv(gym.Env):
         ## Environment configuration
         self.width = width
         self.height = height
-        self.turn = turn
-        self.max_steps=max_steps
-        self.steering = steering
+        self.max_steps=max_steps ##max number of time steps per trial
 
         ## Initialise render window as None
         self.window=None
 
-        ## Current position and direction of the agent
+        ## Starting position and direction of the agent
         self.agent_pos = agent_start_pos
         self.agent_dir = agent_start_dir
 
-        ## agent movement attributes
-        self.SPEED = speed ## pixels per step
+        ## Agent mobility
+        self.turn=turn ##number of times it can turn in a circle (only dor discrete actions)
+        self.steering = steering ##steering model string id
+        self.speed = speed
+        
         if self.turn is not None:
-            self.rotation = 360/self.turn ##degrees rotated per timestep
+            self.rotation = 360/self.turn ##degrees rotated per timestep when using discrete action space
 
-            ## Convert to vectors
+            ## Convert to vectors to generate possible start directions
             self.StartDirs = [[1,0]]
             for h in range(self.turn):
                 nxt = Vector2(self.StartDirs[-1]).rotate(self.rotation)[:]
@@ -211,7 +221,7 @@ class RatBoxEnv(gym.Env):
         ## rendering attributes
         self.render_mode = render_mode
 
-        ## steering model
+        ## steering model (default is discrete)
         if self.steering is None:
             self.steering = 'discrete'   
         self.steering_model = STEERING[self.steering]
@@ -226,11 +236,11 @@ class RatBoxEnv(gym.Env):
 
 
     def reset(self, seed=None, options=None):
-        ## Reset the environment at the beginning of each learning trial
+        '''Reset the environment at the beginning of each learning trial'''
         self.done = False
         self.max_rew = 1
 
-        # Generate a new random grid at the start of each episode=
+        # Generate a new random grid at the start of each episode
         self._gen_world(self.width, self.height)
 
         # Step count since episode start
@@ -246,6 +256,7 @@ class RatBoxEnv(gym.Env):
         return obj
 
     def _get_game_objects(self):
+        '''Fetch a list of objects in the environment'''
         game_object=[]
         for obj in self.world.contents:
             game_object.append(self.world.contents[obj])
@@ -254,12 +265,12 @@ class RatBoxEnv(gym.Env):
 
 
     def _gen_world(self, width, height):
+        '''generate the world as defined in the specific environment class (e.g. Simple, Wall_room)'''
         pass
 
     def gen_obs(self):
-        """
-        For now, return the agent's position and direction
-        """
+        '''Return the agent's position and direction and the location of the goal'''
+        
         agent_x = self.agent.position[0]
         agent_y = self.agent.position[1]
         direction = self.agent.direction
@@ -272,29 +283,25 @@ class RatBoxEnv(gym.Env):
         return obs
 
     def step(self, action):
-        self.step_count += 1
+        '''Move agent/world forward one time step'''
+        self.step_count += 1 ## increase step count by 1
 
-        self.reward = 0
+        self.reward = 0 
             
         ## Move the agent
         new_pos, new_dir = self.agent.travel.step(self.agent,
                                                   action)
 
         ## check for collisions and adjust accordingly
-        #if self.steering == 'discrete' and action != [0,0,1]:
-        #    self.agent.position = new_pos
-        #else:
         self.agent.position = self._check_collision(new_pos, action)
         self.agent.direction = new_dir
    
-        ## Penalty for bumping into walls
+        ## Penalty for bumping into walls/obstacles
         if self.agent.collision == True:
-            ## instantly learn about the wall being bad
-            #self.max_rew -=0.01
-            #self.reward = -0.01
+            self.reward = -0.01
             self.agent.collision = False
 
-        ## Reward and done when collide with cheese
+        ## Reward and done when collide with goal
         dist = np.abs(self.agent.position-self.goal.position)
         if dist[0] < 50 and dist[1] < 50:
             ## Reward discounted by number of steps it took to reach the goal
@@ -316,9 +323,8 @@ class RatBoxEnv(gym.Env):
         return self.observation, self.reward, self.done, False, info
     
     def _check_collision(self, agent_pos, action):
-        '''
-        Check the agent's path for collisions. 
-        '''
+        '''Check the agent's path for collisions. '''
+        
         pos_in_bounds = self._check_bounds(agent_pos)
         new_pos = self._check_obstacles(pos_in_bounds, action)
         
@@ -329,6 +335,7 @@ class RatBoxEnv(gym.Env):
         Check whether the agent's path takes it outside world bounds. 
         If so, stop the agent at the world bound.
         '''
+        ## World bounds are 50 pixels in from the edges of the rendered surface
         width = self.world.width - 50
         height = self.world.height - 50
 
@@ -354,6 +361,9 @@ class RatBoxEnv(gym.Env):
         '''
         Check if the agent's path crosses over a solid object. 
         If so, stop the agent once it reaches the object.
+        
+        Current the wall is the only solid object. 
+        This function will need to change when more objects are added
         '''
         new_pos = agent_pos
         
@@ -367,10 +377,9 @@ class RatBoxEnv(gym.Env):
             sprite = load_sprite(self.agent.name)
             radius = sprite.get_width()/2
 
-            
             ## Get 10 locations along agent's path, by repeating the action at 10 different speeds
             distance = ((self.agent.position[0] - new_pos[0])**2 + (self.agent.position[1] - new_pos[1])**2)**0.5  
-            speeds = np.linspace(0, distance, 10) # np.linspace(0, action[0], 10)
+            speeds = np.linspace(0, distance, 10) 
 
             trajectory=[]
             for speed in speeds:
@@ -382,17 +391,18 @@ class RatBoxEnv(gym.Env):
             ## will the agent cross the wall?
             for i in range(len(trajectory)):
                 ## Turn the trajectory location into a rect object on the world surface
+                ## with the same radius as the agent
                 agent_rect = pygame.Rect(trajectory[i][0][0], trajectory[i][0][1], radius, radius)
                 
-                
+                ## Check if agent collided with wall
                 if pygame.Rect.colliderect(wall, agent_rect):
-                    # register the collision and penalise for it
+                    ## register the collision and penalise for it
                     self.agent.collision=True
-                    # if the agent will immediately cross the wall, 
-                    # just rotate the agent, don't move forward
+                    ## if the agent will immediately cross the wall, 
+                    ## just rotate the agent, don't move forward
                     if len(trajectory[:i])==0:
                         new_pos = self.agent.position
-                    # otherwise, move the agent to the last possible position
+                    ## otherwise, move the agent to the last possible position
                     new_pos = trajectory[i-1][0]
                     break
                     
@@ -425,10 +435,6 @@ class RatBoxEnv(gym.Env):
             )
 
         self.clock = pygame.time.Clock() ## use clock
-
-        ## Scaling factor for fitting the environment into the render screen
-        ## TO DO: FIGURE OUT SCALING FACTOR
-        #scale = self.screen_width / self.width
 
         ## Set screen background
         self.background = pygame.Surface((self.screen_width, self.screen_height))

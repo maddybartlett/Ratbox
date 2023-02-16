@@ -6,7 +6,7 @@ class Simple(RatBoxEnv):
     agent_start_pos=None, agent_start_dir=None, **kwargs):
 
         self.agent_start_pos = agent_start_pos
-        self.agent_start_dir = agent_start_dir             
+        self.agent_start_dir = agent_start_dir      
 
         super().__init__(
             width=width,
@@ -32,7 +32,7 @@ class Simple(RatBoxEnv):
         if self.agent_start_dir is None:
             self.agent_dir=[]
             ## Choose from a discrete set of directions for the discrete action space
-            if self.steering is None:
+            if self.steering is None or self.steering == 'discrete':
                 dir_idx = random.randint(0,self.turn)
                 self.agent_dir = self.StartDirs[dir_idx]
             ## Choose from infinite directions
@@ -43,7 +43,7 @@ class Simple(RatBoxEnv):
             self.agent_dir = self.agent_start_dir
 
         ## Place agent in the world
-        self.agent = Agent(self.agent_pos, self.agent_dir, self.SPEED, self.steering, self.rotation)
+        self.agent = Agent(self.agent_pos, self.agent_dir, self.speed, self.steering, self.rotation)
         self.world.add_obj(self.agent)
        
         # Set goal position
