@@ -1,4 +1,4 @@
-from ratbox_env import RatBoxEnv, World, Goal, Agent, Wall
+from ratbox.ratbox_env import RatBoxEnv, World, Goal, Agent, Wall
 
 class Wall_room(RatBoxEnv):
     def __init__(self, width=600, height=600, speed=100, turn=4, steering=None,

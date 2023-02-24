@@ -1,4 +1,4 @@
-from ratbox_env import RatBoxEnv, World, Goal, Agent
+from ratbox.ratbox_env import RatBoxEnv, World, Goal, Agent
 import random
 
 class Simple(RatBoxEnv):

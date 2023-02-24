@@ -10,8 +10,8 @@ from pygame.math import Vector2
 from pygame.image import load
 from pygame.transform import rotozoom
 
-from utils import load_sprite, softmax
-from steering import SteeringModel, DiscreteModel, KinematicUnicycle, CompassModel, EgoModel, SkidSteer
+from ratbox.steering import SteeringModel, DiscreteModel, KinematicUnicycle, CompassModel, EgoModel, SkidSteer
+from ratbox.utils import load_sprite, softmax
 
 
 # Map of color names to RGB values

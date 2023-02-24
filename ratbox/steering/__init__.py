@@ -1,5 +1,4 @@
 import ratbox.steering
-import steering
 from .steering import SteeringModel
 from .kinematic_unicycle import KinematicUnicycle
 from .discrete import DiscreteModel 
