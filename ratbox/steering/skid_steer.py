@@ -32,7 +32,7 @@ class SkidSteer(SteeringModel):
     def step(self, agent, u, dt=1, x=None):
         
         ## load agent sprite and get width
-        image = pygame.image.load('ratbox\\envs\\assets\\rat.png')
+        image = pygame.image.load('ratbox\\utils\\assets\\rat.png')
         self._width = image.get_height()
 
         ## get agent state
