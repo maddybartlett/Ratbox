@@ -21,7 +21,7 @@ sys.path.append('C:\\Users\\Path\\To\\Ratbox')
 
 ## Environments
 
-The environments are simple 2D worlds that the agent (the rat) must navigate through in order to reach a goal (the cheese).
+The environments are simple 2D worlds, 600x600 pixels, that the agent (the rat) must navigate through in order to reach a goal (the cheese).
 
 The space can be defined as either discrete or continuous by selecting the appropriate steering model.
 
@@ -30,11 +30,13 @@ The space can be defined as either discrete or continuous by selecting the appro
 ### Discrete
 
 The discrete steering models forces the state space to be discrete. The action space is limited to 3 movements:
-1) 0 = turn right
-2) 1 = turn left
-3) 2 = move forward
+1) turn right = 0
+2) turn left = 1
+3) move forward = 2
 
-The default settings force the agent to turn 90 degrees when turning, and move forward by 100 pixels. This can be changed by changing the "turn" and "speed" arguments when initialising a new environment.
+The default settings force the agent to turn 90 degrees when turning, and move forward by 100 pixels. 
+The result is 
+This can be changed by changing the "turn" and "speed" arguments when initialising a new environment.
 - "turn" = number of turns needed to turn 360 degrees
 - "speed" = number of pixels travelled when moving forward
 
