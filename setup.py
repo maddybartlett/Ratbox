@@ -10,11 +10,7 @@ setup(
             name='ratbox', 
             version='0.0.1',  
             author = 'Maddy Bartlett, Nicole Dumont, Michael Furlong, Terry Stewart', 
-            packages = [
-            'steering',
-            'envs',
-            'utils',
-        ],
+            packages = ['ratbox'],
             
             install_requires=[
                 'Gymnasium==0.26.3', 
