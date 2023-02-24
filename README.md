@@ -13,5 +13,5 @@ Install package by running: `pip install --user -e .`
 
 Whenever you import this package you will need to add the path to the sys.path.
 
-`import sys
-sys.path.append('C:\\Users\\Path\\To\\Ratbox')`
+```import sys
+sys.path.append('C:\\Users\\Path\\To\\Ratbox')```
