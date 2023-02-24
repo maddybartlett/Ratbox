@@ -17,9 +17,15 @@ The environments are simple 2D worlds, 600x600 pixels, that the agent (the rat) 
 
 The space can be defined as either discrete or continuous by selecting the appropriate steering model.
 
+The agent's state at any time is defined in terms of its x,y coordinate location in the world and the direction it's facing. 
+
 ## Steering Models
 
 ### Discrete
+
+<p align="center">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete.gif" width="400"/>
+</p>
 
 The discrete steering models forces the state space to be discrete. The action space is limited to 3 movements:
 1) turn right = 0
@@ -27,8 +33,9 @@ The discrete steering models forces the state space to be discrete. The action s
 3) move forward = 2
 
 The default settings force the agent to turn 90 degrees when turning, and move forward by 100 pixels. 
-The result is 
-This can be changed by changing the "turn" and "speed" arguments when initialising a new environment.
+The result in the discrete case is a 6x6x4 state space with 144 possible states for the agent to be in. 
+
+The size of the available state space can be changed by changing the "turn" and "speed" arguments when initialising a new environment.
 - "turn" = number of turns needed to turn 360 degrees
 - "speed" = number of pixels travelled when moving forward
 
