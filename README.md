@@ -23,9 +23,9 @@ The agent's state at any time is defined in terms of its x,y coordinate location
 
 ### Discrete
 
-<pre align="center">
+<p align="center">
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete.gif" width="400"/>
-</pre>
+</p>
 
 The discrete steering models forces the state space to be discrete. The action space is limited to 3 movements:
 1) turn right = 0
