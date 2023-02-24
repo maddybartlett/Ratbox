@@ -37,6 +37,7 @@ The discrete steering models forces the state space to be discrete. The action s
 The default settings force the agent to turn 90 degrees when turning, and move forward by 100 pixels. This can be changed by changing the "turn" and "speed" arguments when initialising a new environment.
 - "turn" = number of turns needed to turn 360 degrees
 - "speed" = number of pixels travelled when moving forward
+
 For example, in `ratbox\__init__.py` you can register a new environment where the agent turns 45 degrees and can step forward 200 pixels each timestep.
 ```
 register(
