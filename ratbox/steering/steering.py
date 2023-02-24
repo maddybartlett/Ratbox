@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class SteeringModel(object):
     def __init__(self, state_dim : int = 1, command_dim : int = 1, max_speed : int = 1):
         self.state = np.zeros((state_dim,))

@@ -24,7 +24,7 @@ register(
     entry_point="ratbox.envs:Wall_room",
     reward_threshold=95, 
     max_episode_steps=200, 
-    kwargs={"turn": 4, "agent_start_pos": (50,50), "agent_start_dir": (1,0)})
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0)})
 
 ## Random start direction
 register(
@@ -32,4 +32,4 @@ register(
     entry_point="ratbox.envs:Wall_room",
     reward_threshold=95, 
     max_episode_steps=200, 
-    kwargs={"turn": 4, "agent_start_pos": (50,50)})
+    kwargs={"agent_start_pos": (50,50)})

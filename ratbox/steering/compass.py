@@ -1,6 +1,6 @@
 import numpy as np
 from pygame.math import Vector2
-from utils import softmax
+from ratbox.utils import softmax
 from .steering import SteeringModel
 
 from gymnasium import spaces
@@ -46,7 +46,7 @@ class CompassModel(SteeringModel):
     
     def step(self, agent, u):
 
-        assert len(u) != self.command_dim, f'Expected 4 action commands, got {len(u)}'
+        assert len(u) == self._command_dim, f'Expected 4 action commands, got {len(u)}'
         
         ## Action weights
         weights = softmax(np.asarray(u)*1)

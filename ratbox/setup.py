@@ -13,6 +13,7 @@ setup(
             packages = [
             'steering',
             'envs',
+            'utils',
         ],
             
             install_requires=[

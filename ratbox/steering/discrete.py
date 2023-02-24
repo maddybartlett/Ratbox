@@ -1,6 +1,6 @@
 import numpy as np
 from pygame.math import Vector2
-from utils import softmax
+from ratbox.utils import softmax
 from .steering import SteeringModel
 
 from gymnasium import spaces
