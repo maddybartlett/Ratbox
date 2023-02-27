@@ -28,6 +28,10 @@ The agent's state at any time is defined in terms of its x,y coordinate location
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete_explore.gif" width="450"/>
 </p>
 
+```
+env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "discrete")
+``` 
+
 The discrete steering models forces the state space to be discrete. The action space is limited to 3 movements:
 1) turn right = 0
 2) turn left = 1
@@ -56,6 +60,10 @@ register(
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/compass.gif" width="450"/>
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/compass_explore.gif" width="450"/>
 </p>
+
+```
+env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "compass")
+``` 
 
 The compass steering models provides a continuous state and action space without requiring any major changes to the RL learning rule (i.e. introducing new continuous policy methods such as learning a Gaussian policy). 
 We achieve this by formulating the continuous action based on a discrete set of action primitives. 
@@ -106,6 +114,10 @@ The use of action primitives makes this steering model readily compatible with t
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/ego.gif" width="450"/>
 </p>
 
+```
+env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "ego")
+``` 
+
 The ego steering model is similar to the compass model but takes an **ego-centric** perspective. 
 
 We still rely on the use of action primitives, but instead of using global directions as the action primitives, we use directions relative to the agent's current heading. 
@@ -133,6 +145,15 @@ Once these vectors for the action primitives have been calculated, the Agent's n
 <p align="center">
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="450"/>
 </p>
+
+```
+env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "unicycle")
+``` 
+
+We also imnplemented the kinematic unicycle steering model. This steering model treats the agent as if it were a single wheel. 
+
+`env.step()` takes 2 values as the `action` - **speed** and **direction** of motion. 
+The **speed** value can range from -1 to 1, with negative values indicating motion in the backwards direction. 
 
 ### Skid-Steer
 
