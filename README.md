@@ -70,12 +70,14 @@ For example, the vector `[0.1,0.2,6,0.4]` would indicate that the highest value 
 This vector can be fed into the `env.step()` function as the `action` variable. The compass steering model then performs a softmax over the vector, normalising the values to between 0 and 1, such that the sum of the vector $= 1$. 
 
 $$ softmax([0.1,0.2,6,0.4]) = [0.003, 0.003, 0.99, 0.004] $$
+
 $$ softmax([-2,4,4,-2]) = [0.001, 0.499, 0.499, 0.001] $$
 
 This new normalised vector is referred to as the *weights* for the action primitives. 
-The agent's movement vector - a 2-digit vector describing its motion along the x and y axes - is calculated as the weighted sum of the action primitives (the dot product $weights \cdot direction_vectors$:
+The agent's movement vector - a 2-digit vector describing its motion along the x and y axes - is calculated as the weighted sum of the action primitives (the dot product weights $\cdot$ direction vectors:
 
 $$ [0.003, 0.003, 0.99, 0.004] \cdot [North, South, East, West] = [0.986, 0] $$
+
 $$ [0.001, 0.499, 0.499, 0.001] \cdot [North, South, East, West] = [0.498, 0.498] $$
 
 The resultant vector describes the agent's direction of motion. As you can see, it is not limited to the 4 action primitives but can contain any values ranging from -1 to 1. Consequently, the agent is able to move in any direction, and thereby can visit any of infinite locations within the environment. 
