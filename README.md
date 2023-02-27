@@ -23,8 +23,9 @@ The agent's state at any time is defined in terms of its x,y coordinate location
 
 ### Discrete
 
-<p align="center">
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete.gif" width="600"/>
+<p align="left">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete.gif" width="450"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/discrete_explore.gif" width="450"/>
 </p>
 
 The discrete steering models forces the state space to be discrete. The action space is limited to 3 movements:
@@ -51,8 +52,9 @@ register(
 
 ### Compass
 
-<p align="center">
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/compass.gif" width="600"/>
+<p align="left">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/compass.gif" width="450"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/compass_explore.gif" width="450"/>
 </p>
 
 The compass steering models provides a continuous state and action space without requiring any major changes to the RL learning rule (i.e. introducing new continuous policy methods such as learning a Gaussian policy). 
@@ -101,7 +103,7 @@ The use of action primitives makes this steering model readily compatible with t
 ### Ego
 
 <p align="center">
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/ego.gif" width="600"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/ego.gif" width="450"/>
 </p>
 
 The ego steering model is similar to the compass model but takes an **ego-centric** perspective. 
@@ -128,12 +130,12 @@ Once these vectors for the action primitives have been calculated, the Agent's n
 
 ### Kinematic Unicycle
 
-<p align="left">
+<p align="center">
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="450"/>
 </p>
 
 ### Skid-Steer
 
 <p align="center">
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/skidsteer.gif" width="600"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/skidsteer.gif" width="450"/>
 </p>
