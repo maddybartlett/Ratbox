@@ -96,3 +96,4 @@ if displacement = [49.8, 49.8]
 agent's new position = [99.8, 99.8]
 ```
 
+The use of action primitives makes this steering model readily compatible with the standard formulation of Reinforcement Learning rules - rules which learn across a discrete action space. Therefore, we can use the standard, discrete action-value mapping whilst being able to operate in continuous state and action spaces. 
