@@ -115,9 +115,9 @@ We still rely on the use of action primitives, but instead of using global direc
 Again the `action` given to the `env.step()` function is a vector containing 4 values, describing the value of moving in each direction. 
 The first thing that the step function does is calculate the direction vectors for each action, based on the direction the agent is currently facing. 
 
-```
-Forward = Agent's current direction
-Backward = Agent's current direction $* -1$
-```
+$$ `Forward` = `Agent's current direction` $$
+
+$$`Backward` = `Agent's current direction` * -1$$
+
 
 So the direction vector for `Forward` would be the same as the agent's current direction. Whereas the vector for `Backard` $=$ `Forward` $ * -1 $. 
