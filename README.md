@@ -97,3 +97,27 @@ agent's new position = [99.8, 99.8]
 ```
 
 The use of action primitives makes this steering model readily compatible with the standard, discrete formulation of Reinforcement Learning rules - rules which learn across a discrete action space. Therefore, we can use the standard, discrete action-value mapping whilst being able to operate in continuous state and action spaces. 
+
+### Ego
+
+<p align="center">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/ego.gif" width="600"/>
+</p>
+
+The ego steering model is similar to the compass model but takes an **ego-centric** perspective. 
+
+We still rely on the use of action primitives, but instead of using global directions as the action primitives, we use directions relative to the agent's current heading. 
+1) Forward
+2) Backward
+3) Rightward
+4) Leftward
+
+Again the `action` given to the `env.step()` function is a vector containing 4 values, describing the value of moving in each direction. 
+The first thing that the step function does is calculate the direction vectors for each action, based on the direction the agent is currently facing. 
+
+```
+Forward = Agent's current direction
+Backward = Agent's current direction $* -1$
+```
+
+So the direction vector for `Forward` would be the same as the agent's current direction. Whereas the vector for `Backard` $=$ `Forward` $ * -1 $. 
