@@ -129,8 +129,8 @@ Once these vectors for the action primitives have been calculated, the Agent's n
 ### Kinematic Unicycle
 
 <p align="left">
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="500"/>
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="500"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="450"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/unicycle.gif" width="450"/>
 </p>
 
 ### Skid-Steer
