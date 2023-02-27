@@ -125,3 +125,7 @@ The first thing that the step function does is calculate the direction vectors f
 
 
 Once these vectors for the action primitives have been calculated, the Agent's new location and heading is calculated using the same procedure as the compass model. 
+
+### Kinematic Unicycle
+
+### Skid-Steer
