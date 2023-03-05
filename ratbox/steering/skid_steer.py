@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from .steering import SteeringModel
 
 from gymnasium import spaces
@@ -32,7 +33,9 @@ class SkidSteer(SteeringModel):
     def step(self, agent, u, dt=1, x=None):
         
         ## load agent sprite and get width
-        image = pygame.image.load('ratbox\\utils\\assets\\rat.png')
+        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..', 'utils'))
+        path = os.path.join(__location__, f'assets\\rat.png')
+        image = pygame.image.load(path)
         self._width = image.get_height()
 
         ## get agent state

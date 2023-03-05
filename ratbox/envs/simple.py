@@ -45,9 +45,8 @@ class Simple(RatBoxEnv):
         ## Place agent in the world
         self.agent = Agent(self.agent_pos, self.agent_dir, self.speed, self.steering, self.rotation)
         self.world.add_obj(self.agent)
-       
-        # Set goal position
-        self.goal_pos = (self.width-50,self.height-50)
 
-        self.goal = self._put_object(Goal(self.goal_pos))
+        ## Place goal in world
+        self.goal_pos = (self.width-50,self.height-50)
+        self.goal = Goal(self.goal_pos)
         self.world.add_obj(self.goal)

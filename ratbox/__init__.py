@@ -21,7 +21,7 @@ register(
 ## Start facing east
 register(
     id="RatBox-wall-v0",
-    entry_point="ratbox.envs:Wall_room",
+    entry_point="ratbox.envs:WallRoom",
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0)})
@@ -29,7 +29,15 @@ register(
 ## Random start direction
 register(
     id="RatBox-wall-randomDir-v0",
-    entry_point="ratbox.envs:Wall_room",
+    entry_point="ratbox.envs:WallRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50)})
+
+## Random start direction
+register(
+    id="RatBox-cwall-v0",
+    entry_point="ratbox.envs:CurveWallRoom",
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,50)})

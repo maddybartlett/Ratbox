@@ -2,6 +2,7 @@ import gymnasium as gym
 from gymnasium import spaces 
 
 import numpy as np
+import math
 from enum import IntEnum
 from typing import Optional
 
@@ -57,8 +58,8 @@ class WorldObject:
 
     def draw(self, surface):
         ## Load sprite and retrieve radius. Do not draw to surface
-        self.sprite = load_sprite(self.name)
-        self.radius = self.sprite.get_width()/2
+        self.image = load_sprite(self.name)
+        self.radius = self.image.get_width()/2
 
 class Goal(WorldObject):
     '''
@@ -79,7 +80,7 @@ class Wall(WorldObject):
     '''
     def __init__(self, position, w=10, h=10, name='wall'):
         self.position = position # x,y location of the centre of the wall
-        self.sprite=None # set to None to distinguish from Goal and Agent
+        self.image=None # set to None to distinguish from Goal and Agent
         self.w = w # wall width
         self.h = h # wall height
 
@@ -94,8 +95,7 @@ class Wall(WorldObject):
 
     def draw(self, surface):
         color = COLORS["grey"]
-        pygame.draw.rect(surface, color, self.rect)
-
+        pygame.draw.rect(surface, color, self.rect)        
 
 class Agent():
     '''
@@ -124,8 +124,8 @@ class Agent():
         self.name = name
 
     def draw(self, surface):
-        self.sprite = load_sprite(self.name)
-        self.radius = self.sprite.get_width()/2
+        self.image = load_sprite(self.name)
+        self.radius = self.image.get_width()/2
 
 
 class World:
@@ -160,26 +160,6 @@ class RatBoxEnv(gym.Env):
         "steering_models": ["discrete", "compass", "ego", "unicycle", "skidsteer"]
     }
 
-    class Discrete_Actions(IntEnum):
-        # move forward, turn right, turn left 
-        forward = 0
-        right = 1
-        left = 2
-
-    class Compass_Actions(IntEnum):
-        # move north, south, east or west
-        north = 0
-        south = 1
-        east = 2
-        west = 3
-
-    class Ego_Actions(IntEnum):
-        # move forward, backward, rightward or leftward
-        forward = 0
-        backward = 1
-        rightward = 2
-        leftward = 3
-
     def __init__(self, 
                 width: int = 600,
                 height: int = 600,
@@ -195,18 +175,20 @@ class RatBoxEnv(gym.Env):
         ## Environment configuration
         self.width = width
         self.height = height
-        self.max_steps=max_steps ##max number of time steps per trial
+        self.max_steps = max_steps ##max number of time steps per trial
 
         ## Initialise render window as None
-        self.window=None
+        self.window = None
 
         ## Starting position and direction of the agent
         self.agent_pos = agent_start_pos
         self.agent_dir = agent_start_dir
 
         ## Agent mobility
-        self.turn=turn ##number of times it can turn in a circle (only dor discrete actions)
+        self.turn = turn ##number of times it can turn in a circle (only dor discrete actions)
         self.steering = steering ##steering model string id
+            
+        
         self.speed = speed
         
         if self.turn is not None:
@@ -223,8 +205,15 @@ class RatBoxEnv(gym.Env):
 
         ## steering model (default is discrete)
         if self.steering is None:
-            self.steering = 'discrete'   
-        self.steering_model = STEERING[self.steering]
+            self.steering = 'discrete'  
+        
+        ## Make sure steering model is valid     
+        try:
+            self.steering_model = STEERING[self.steering]
+        except KeyError:
+            keysList = list(STEERING.keys())
+            keysString = ', '.join(keysList)
+            raise(KeyError(f'Invalid steering model entered. Please use one of the following: {keysString}'))
 
         self.action_space = self.steering_model.action_space()
         self.n_actions = self.action_space.shape[0]
@@ -247,13 +236,9 @@ class RatBoxEnv(gym.Env):
         self.step_count = 0
 
         # Return first observation
-        obs = self.gen_obs()
+        obs = self._gen_obs()
 
         return obs, {}
-
-    def _put_object(self, obj: WorldObject):
-        '''Put an object in a specific position in the box'''
-        return obj
 
     def _get_game_objects(self):
         '''Fetch a list of objects in the environment'''
@@ -268,7 +253,7 @@ class RatBoxEnv(gym.Env):
         '''generate the world as defined in the specific environment class (e.g. Simple, Wall_room)'''
         pass
 
-    def gen_obs(self):
+    def _gen_obs(self):
         '''Return the agent's position and direction and the location of the goal'''
         
         agent_x = self.agent.position[0]
@@ -284,13 +269,13 @@ class RatBoxEnv(gym.Env):
 
     def step(self, action):
         '''Move agent/world forward one time step'''
+        action = self.get_action(action)
         self.step_count += 1 ## increase step count by 1
 
         self.reward = 0 
             
         ## Move the agent
-        new_pos, new_dir = self.agent.travel.step(self.agent,
-                                                  action)
+        new_pos, new_dir = self.agent.travel.step(self.agent, action)
 
         ## check for collisions and adjust accordingly
         self.agent.position = self._check_collision(new_pos, action)
@@ -321,6 +306,9 @@ class RatBoxEnv(gym.Env):
 
         info = {}
         return self.observation, self.reward, self.done, False, info
+    
+    def get_action(self, action):
+        return action
     
     def _check_collision(self, agent_pos, action):
         '''Check the agent's path for collisions. '''
@@ -420,8 +408,8 @@ class RatBoxEnv(gym.Env):
         pygame.init()
 
         ## Screen dimensions in pixels
-        self.screen_width = 600
-        self.screen_height = 600
+        self.screen_width = self.width
+        self.screen_height = self.height
 
         ## for "human" mode, show the render window on screen
         if self.render_mode == "human":
@@ -450,9 +438,9 @@ class RatBoxEnv(gym.Env):
             obj.draw(self.window)
 
             ## if there's a sprite, rotate and calculate size and position of sprite
-            if obj.sprite is not None:
+            if obj.image is not None:
                 self.angle = obj.direction
-                rotated_obj = rotozoom(obj.sprite, self.angle, 1.0)
+                rotated_obj = rotozoom(obj.image, self.angle, 1.0)
                 rotated_obj_size = Vector2(rotated_obj.get_size())
 
                 ## calculate position
