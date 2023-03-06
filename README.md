@@ -154,7 +154,9 @@ We also imnplemented the kinematic unicycle steering model. This model is common
 
 `env.step()` takes 2 values as the `action` - **speed** and **direction** of motion. 
 The **speed** value can range from -1 to 1, with negative values indicating motion in the backwards direction. 
-**direction** can range between $-\pi / 2$ to $+\pi / 2$ 
+**direction** can range between $-\pi / 2$ radians to $\pi / 2$ radians. 
+
+**Note:** direction is converted from degrees to radians and back again by this steering model.
 
 ### Skid-Steer
 
