@@ -150,10 +150,11 @@ Once these vectors for the action primitives have been calculated, the Agent's n
 env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "unicycle")
 ``` 
 
-We also imnplemented the kinematic unicycle steering model. This steering model treats the agent as if it were a single wheel. 
+We also imnplemented the kinematic unicycle steering model. This model is commonly used as a mobile robot kinematics equation. It assumes that the vehicle is a single wheel that pivots about a central axis.   
 
 `env.step()` takes 2 values as the `action` - **speed** and **direction** of motion. 
 The **speed** value can range from -1 to 1, with negative values indicating motion in the backwards direction. 
+**direction** can range between $-\pi / 2$ to $+\pi / 2$ 
 
 ### Skid-Steer
 
