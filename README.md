@@ -158,8 +158,19 @@ The **speed** value can range from -1 to 1, with negative values indicating moti
 
 **Note:** direction is converted from degrees to radians and back again by this steering model.
 
+A wrapper is available for converting from the 4 action primitives to speed and direction (ConvertUnicycleWrapper).
+
 ### Skid-Steer
 
 <p align="center">
 <img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/skidsteer.gif" width="450"/>
 </p>
+
+The final steering model is the skid-steer model. This model is also commonly used for steering mobile robots. It assumes the vehicle has two wheels. 
+
+`env.step()` takes 2 values as the `action` - **left wheel speed** and **right wheel speed**.
+Both of these values can range between -1 and 1. 
+
+Speed is calculated as half the sum of the speeds of the left and right tracks. Rotation is calculated as the difference between track speeds divided by the width of the agent.
+
+A wrapper is available for converting from the 4 action primitives to speed and direction (ConvertSkidWrapper).
