@@ -38,9 +38,13 @@ class KinematicUnicycle(SteeringModel):
                           np.deg2rad(agent.direction+90)])
         else:
             x = np.array([x[0], x[1], np.deg2rad(agent.direction+90)])
-            
+        
         assert len(u) != self.command_dim, f'Expected 2 action commands, got {len(u)}'
         assert len(x) != self.state_dim, f'Expected 3 items in state, got {len(x)}'
+        
+        ## Clip actions to be within action space bounds
+        u[0] = np.clip(u[0], -1, +1).astype(np.float32)
+        u[1] = np.clip(u[1], -np.pi/2, np.pi/2).astype(np.float32)
 
         ## velocity 
         vel = u[0] * self.max_speed()

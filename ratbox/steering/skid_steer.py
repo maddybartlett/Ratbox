@@ -44,6 +44,10 @@ class SkidSteer(SteeringModel):
         ## check action and state have correct number of elements
         assert len(u) == 2, f'Expected 2 action commands, got {len(u)}'
         assert len(x) == 3, f'Expected 3 items in state, got {len(x)}'
+        
+        ## Clip actions to be within action space bounds
+        for i in range(len(u)):
+            u[i] = np.clip(u[i], -1, +1).astype(np.float32)
 
         ## calculate velocity as half the sum of the speeds of the left and right tracks
         vel = ((u[0] + u[1]) / 2) * self.max_speed()

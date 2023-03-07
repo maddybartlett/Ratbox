@@ -19,9 +19,9 @@ class EgoModel(SteeringModel):
     def __init__(self):
         super().__init__(state_dim=3, command_dim=4, max_speed=100)
         
-        self._action_space = spaces.Box(low=np.array([0, 0, 0, 0], dtype=np.float32), 
-                                        high=np.array([1, 1, 1, 1], dtype=np.float32)
-                                        )
+        self._action_space = spaces.Box(low=np.array([-np.inf,-np.inf,-np.inf,-np.inf], dtype=np.float32), 
+                                        high=np.array([np.inf,np.inf,np.inf,np.inf], dtype=np.float32)
+                                       )
                                        
 
         self._observation_space = spaces.Box(low=np.array([-np.inf, -np.inf, 0], dtype=np.float32), 

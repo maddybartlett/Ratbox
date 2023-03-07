@@ -269,7 +269,6 @@ class RatBoxEnv(gym.Env):
 
     def step(self, action):
         '''Move agent/world forward one time step'''
-        action = self.get_action(action)
         self.step_count += 1 ## increase step count by 1
 
         self.reward = 0 
@@ -306,9 +305,6 @@ class RatBoxEnv(gym.Env):
 
         info = {}
         return self.observation, self.reward, self.done, False, info
-    
-    def get_action(self, action):
-        return action
     
     def _check_collision(self, agent_pos, action):
         '''Check the agent's path for collisions. '''

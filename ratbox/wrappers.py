@@ -4,6 +4,7 @@ from gymnasium import spaces
 import numpy as np
 
 from ratbox.utils import softmax
+from gymnasium.core import Wrapper
 
 class ConvertUnicycleWrapper(Wrapper):
     '''
@@ -28,17 +29,23 @@ class ConvertUnicycleWrapper(Wrapper):
         
         self.env = env
         
-        self._action_space = spaces.Box(low=np.array([0, 0, 0, 0], dtype=np.float32), 
-                                        high=np.array([1, 1, 1, 1], dtype=np.float32)
+        self._action_space = spaces.Box(low=np.array([-np.inf,-np.inf,-np.inf,-np.inf], dtype=np.float32), 
+                                        high=np.array([np.inf,np.inf,np.inf,np.inf], dtype=np.float32)
                                        )
         
         self.env.steering_model.command_dim = 4
         self.env.steering_model.action_space = self.action_space
+        
+        super().__init__(env)
     
     def action_space(self):
         return self._action_space
     
-    def get_action(self, action):
+    def step(self, action):
+        action = self._get_action(action)
+        return self.env.step(action)
+    
+    def _get_action(self, action):
         action = self._convert_input(self.env.agent, action)
         return action
      
@@ -69,7 +76,7 @@ class ConvertUnicycleWrapper(Wrapper):
         
         ## check action and state have correct number of elements
         assert len(u) == 4, f'Expected 4 action commands, got {len(u)}'
-        
+
         ## Action weights
         u = np.asarray([u[:2], u[2:]])
         weights = np.array([softmax(u[0]*1), softmax(u[1]*1)])
@@ -127,8 +134,8 @@ class ConvertSkidWrapper(Wrapper):
         
         self.env = env
         
-        self._action_space = spaces.Box(low=np.array([0, 0, 0, 0], dtype=np.float32), 
-                                        high=np.array([1, 1, 1, 1], dtype=np.float32)
+        self._action_space = spaces.Box(low=np.array([-np.inf,-np.inf,-np.inf,-np.inf], dtype=np.float32), 
+                                        high=np.array([np.inf,np.inf,np.inf,np.inf], dtype=np.float32)
                                        )
         
         self.env.steering_model.command_dim = 4
@@ -137,7 +144,11 @@ class ConvertSkidWrapper(Wrapper):
     def action_space(self):
         return self._action_space
     
-    def get_action(self, action):
+    def step(self, action):
+        action = self._get_action(action)
+        return self.env.step(action)
+    
+    def _get_action(self, action):
         action = self._convert_input(self.env.agent, action)
         return action
      

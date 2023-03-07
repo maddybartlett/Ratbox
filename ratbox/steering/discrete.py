@@ -36,6 +36,10 @@ class DiscreteModel(SteeringModel):
         
         assert len(u) == 3, f'Expected 2 action commands, got {len(u)}'
         
+        ## Clip actions to be within action space bounds
+        for i in range(len(u)):
+            u[i] = np.clip(u[i], 0, np.inf).astype(np.float32)
+        
         ## Action weights
         weights = softmax(np.asarray(u)*1)
         
