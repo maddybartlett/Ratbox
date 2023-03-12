@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # Helper function to load up readme as long description.
 def read(fname):
@@ -10,7 +10,11 @@ setup(
             name='ratbox', 
             version='0.0.1',  
             author = 'Maddy Bartlett, Nicole Dumont, Michael Furlong, Terry Stewart', 
-            packages = ['ratbox'],
+            packages=find_packages(),
+            include_package_data=True,
+            package_data = {
+                "": ["*.png"]
+            },
             
             install_requires=[
                 'Gymnasium==0.26.3', 

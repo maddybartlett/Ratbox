@@ -34,7 +34,7 @@ class SkidSteer(SteeringModel):
         
         ## load agent sprite and get width
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..', 'utils'))
-        path = os.path.join(__location__, f'assets\\rat.png')
+        path = os.path.join(__location__, f'rat.png')
         image = pygame.image.load(path)
         self._width = image.get_height()
 
