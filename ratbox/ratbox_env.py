@@ -388,6 +388,9 @@ class RatBoxEnv(gym.Env):
         return agent_pos
 
     def _check_turn(self, object_list, new_dir):
+        
+        pygame.display.init()
+        pygame.display.set_mode((self.world.width, self.world.height), flags = pygame.HIDDEN)
 
         ## Get agent's starting direction and position
         old_dir = self.agent.direction
@@ -421,6 +424,9 @@ class RatBoxEnv(gym.Env):
     
            
     def _check_speed(self, object_list, new_pos, new_dir, action):
+        
+        pygame.display.init()
+        pygame.display.set_mode((self.world.width, self.world.height), flags = pygame.HIDDEN)
         
         ## Get agent's starting position
         old_pos = self.agent.position
