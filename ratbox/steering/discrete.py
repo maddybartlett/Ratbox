@@ -34,7 +34,7 @@ class DiscreteModel(SteeringModel):
     
     def step(self, agent, u):
         
-        assert len(u) == 3, f'Expected 2 action commands, got {len(u)}'
+        assert len(u) == 3, f'Expected 3 action commands, got {len(u)}'
         
         ## Clip actions to be within action space bounds
         for i in range(len(u)):
@@ -50,7 +50,7 @@ class DiscreteModel(SteeringModel):
         if action == 0:
             angle = agent.discrete_rotation * 1
             dir_vec = agent.dir_vec.rotate(angle)
-            new_pos = agent.position
+            new_pos = agent.position           
         ## Rotate left
         elif action == 1:
             angle = agent.discrete_rotation * -1

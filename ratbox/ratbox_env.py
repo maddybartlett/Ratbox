@@ -45,23 +45,23 @@ WEST = Vector2(-1, 0)
 DIRECTIONS = [NORTH, SOUTH, EAST, WEST]
 
 ## Create game object
-class WorldObject:
-    '''
-    Parent class for objects placed in the environment/world
-    e.g. goal and obstacles like walls
-    Does not include agent object
-    '''
-    def __init__(self, position, name=None): 
+#class WorldObject:
+#    '''
+#    Parent class for objects placed in the environment/world
+#    e.g. goal and obstacles like walls
+#    Does not include agent object
+#    '''
+#    def __init__(self, position, name=None): 
         ## Initialise position and sprite name (i.e. filename for png image)
-        self.position = Vector2(position)
-        self.name = name
+#        self.position = Vector2(position)
+#        self.name = name
 
-    def draw(self, surface):
+#    def draw(self, surface):
         ## Load sprite and retrieve radius. Do not draw to surface
-        self.image = load_sprite(self.name)
-        self.radius = self.image.get_width()/2
+#        self.image = load_sprite(self.name)
+#        self.radius = self.image.get_width()/2
 
-class Goal(WorldObject):
+class Goal():
     '''
     Goal object 
     Stationary
@@ -73,12 +73,17 @@ class Goal(WorldObject):
         self.direction = self.dir_vec.angle_to(EAST) #in degrees
 
         self.can_overlap = True
-
-class Wall(WorldObject):
+        
+    def draw(self, surface):
+        ## Load sprite and retrieve radius. Do not draw to surface
+        self.image = load_sprite(self.name)
+        self.radius = self.image.get_width()/2
+        
+class Wall():
     '''
     Stationary w x h pixel obstacle in the environment, through which the agent cannot pass
     '''
-    def __init__(self, position, w=10, h=10, name='wall'):
+    def __init__(self, position, w=10, h=10, name='wall', degrees=0):
         self.position = position # x,y location of the centre of the wall
         self.image=None # set to None to distinguish from Goal and Agent
         self.w = w # wall width
@@ -89,13 +94,31 @@ class Wall(WorldObject):
         self.name = name
 
         ## Create the wall object
-        self.rect = pygame.Rect(self.position[0],self.position[1],self.w, self.h)
-        ## Place wall in world
-        self.rect.center = self.position
+        wall = pygame.Surface([self.w, self.h])
+        wall.fill(COLORS["grey"])
+        
+        ## Rotate wall
+        rotatedWall = pygame.transform.rotate(wall, degrees)
+        self.rect = rotatedWall.get_rect(center = position)
 
     def draw(self, surface):
         color = COLORS["grey"]
-        pygame.draw.rect(surface, color, self.rect)        
+        pygame.draw.rect(surface, color, self.rect)       
+        
+class Ball():
+    '''
+    Stationary circle object in the environment which the agent can't pass through.
+    '''     
+    def __init__(self, position, radius=10, colorName="red", name="ball"):
+        self.position = position
+        self.radius = radius
+        self.color = COLORS[colorName]
+        self.name = name
+        
+    def draw(self, surface):
+        #pygame.draw.circle(surface, self.color, )
+        pass
+        
 
 class Agent():
     '''
@@ -274,15 +297,15 @@ class RatBoxEnv(gym.Env):
         self.reward = 0 
             
         ## Move the agent
+        self.old_dir_vec = self.agent.dir_vec
         new_pos, new_dir = self.agent.travel.step(self.agent, action)
 
         ## check for collisions and adjust accordingly
-        self.agent.position = self._check_collision(new_pos, action)
-        self.agent.direction = new_dir
-   
+        self.agent.position, self.agent.direction = self._check_collision(new_pos, new_dir, action)
+
         ## Penalty for bumping into walls/obstacles
         if self.agent.collision == True:
-            self.reward = -0.01
+            self.reward = -0.1
             self.agent.collision = False
 
         ## Reward and done when collide with goal
@@ -306,13 +329,37 @@ class RatBoxEnv(gym.Env):
         info = {}
         return self.observation, self.reward, self.done, False, info
     
-    def _check_collision(self, agent_pos, action):
+    def _check_collision(self, agent_pos, agent_dir, action):
         '''Check the agent's path for collisions. '''
+        new_dir = agent_dir
         
-        pos_in_bounds = self._check_bounds(agent_pos)
-        new_pos = self._check_obstacles(pos_in_bounds, action)
+        ## Get list of obstacles names
+        object_names = list(self.world.contents.keys())[2:]
         
-        return new_pos
+        ## If there are obstacles in the world
+        if len(object_names) != 0:
+            ## Add them to a list of rect objects
+            object_list = []
+            
+            for name in object_names:
+                object_list.append(self.world.contents[str(name)].rect)
+            
+            new_dir = agent_dir   
+            #new_dir = self._check_turn(object_list, agent_dir)
+            
+            ## convert direction to Radians
+            #rad = np.deg2rad(new_dir)
+            ## convert to vector
+            #Vx = np.cos(rad)
+            #Vy = np.sin(rad)
+            #vec = (Vx, Vy)
+            #self.agent.dir_vec = Vector2(vec)
+            
+            new_pos = self._check_speed(object_list, agent_pos, new_dir, action)
+            
+            pos_in_bounds = self._check_bounds(new_pos)
+
+        return pos_in_bounds, new_dir
     
     def _check_bounds(self, agent_pos):
         '''
@@ -340,27 +387,102 @@ class RatBoxEnv(gym.Env):
 
         return agent_pos
 
+    def _check_turn(self, object_list, new_dir):
+
+        ## Get agent's starting direction and position
+        old_dir = self.agent.direction
+        old_pos = self.agent.position
+                    
+        ## Create an agent sprite for collision checking 
+        agent_sprite = load_sprite(self.agent.name)
         
-    def _check_obstacles(self, agent_pos, action):
+        ## Create a list of angles between the agent's starting heading and target heading            
+        angles = np.linspace(old_dir, new_dir, 5) 
+        
+        ## Variable for retrieving the index of the last viable angle
+        angle_index = -1
+        
+        for deg_i in range(len(angles)):
+            ## Turn the agent sprite by each angle
+            rotated_agent = pygame.transform.rotate(agent_sprite, angles[deg_i])
+            
+            ## Place the agent sprite in the world
+            agent_rect = rotated_agent.get_rect(center=(old_pos[0],old_pos[1]))
+            
+            ## Check for collisions
+            index = pygame.Rect.collidelist(agent_rect, object_list) 
+            if index != -1:
+                angle_index = deg_i-1
+                break
+        
+        direction = angles[angle_index]
+        
+        return direction
+    
+           
+    def _check_speed(self, object_list, new_pos, new_dir, action):
+        
+        ## Get agent's starting position
+        old_pos = self.agent.position
+        
+        ## Create an agent sprite for collision checking 
+        agent_sprite = load_sprite(self.agent.name)
+        ## Turn the agent sprite by the selected angle
+        rotated_agent = pygame.transform.rotate(agent_sprite, new_dir)
+        
+        ## Calculate distance from start to target location
+        distance = ((old_pos[0] - new_pos[0])**2 + (old_pos[1] - new_pos[1])**2)**0.5
+        ## Create a list of speeds between 0 and speed needed to reach target location
+        speeds = np.linspace(0, distance, 5) 
+        
+        ## Create a list of locations between start and target
+        locations=[]
+        for speed in speeds:
+            self.agent.travel._max_speed = speed
+            locations.append(self.agent.travel.step(self.agent, action))
+                
+        ## Reset the agent's speed 
+        self.agent.travel._max_speed = 100
+        
+        ## Variable for retrieving the index of the last viable angle
+        location_index = -1
+        for pos_i in range(len(locations)):
+            ## Place the agent sprite in the world
+            agent_rect = rotated_agent.get_rect(center=(locations[pos_i][0][0],locations[pos_i][0][1]))
+            
+            ## Check for collisions
+            index = pygame.Rect.collidelist(agent_rect, object_list) 
+            if index != -1:
+                if pos_i > 0:
+                    location_index = pos_i-1
+                else: 
+                    location_index = 0
+                break
+            
+        position = locations[location_index][0]
+        
+        return position
+        
+        
+    def _check_obstacles(self, agent_pos, agent_dir, action):
         '''
         Check if the agent's path crosses over a solid object. 
         If so, stop the agent once it reaches the object.
-        
-        Current the wall is the only solid object. 
-        This function will need to change when more objects are added
         '''
         new_pos = agent_pos
-        
-        if 'wall' in self.world.contents:
-            ## Get the location of the wall by drawing it
-            wall = self.world.contents['wall'].rect
+        new_dir = agent_dir
+        old_dir = self.agent.direction
+                
+        ## If there are objects in the world, check for collisions
+        if len(self.world.contents) > 2:
             pygame.display.init()
             pygame.display.set_mode((self.world.width, self.world.height), flags = pygame.HIDDEN)
             
             ## Take into account the radius of the agent sprite
             sprite = load_sprite(self.agent.name)
-            radius = sprite.get_width()/2
-
+            rotated_sprite = pygame.transform.rotate(sprite, new_dir)
+            
+            ## Check if the agent's step size needs to be shorter
             ## Get 10 locations along agent's path, by repeating the action at 10 different speeds
             distance = ((self.agent.position[0] - new_pos[0])**2 + (self.agent.position[1] - new_pos[1])**2)**0.5  
             speeds = np.linspace(0, distance, 10) 
@@ -372,25 +494,66 @@ class RatBoxEnv(gym.Env):
                 
             self.agent.travel._max_speed = 100
                 
-            ## will the agent cross the wall?
-            for i in range(len(trajectory)):
-                ## Turn the trajectory location into a rect object on the world surface
-                ## with the same radius as the agent
-                agent_rect = pygame.Rect(trajectory[i][0][0], trajectory[i][0][1], radius, radius)
+            for obj in list(self.world.contents.keys())[2:]:
+                obj_rect = self.world.contents[str(obj)].rect
                 
-                ## Check if agent collided with wall
-                if pygame.Rect.colliderect(wall, agent_rect):
-                    ## register the collision and penalise for it
-                    self.agent.collision=True
-                    ## if the agent will immediately cross the wall, 
-                    ## just rotate the agent, don't move forward
-                    if len(trajectory[:i])==0:
-                        new_pos = self.agent.position
-                    ## otherwise, move the agent to the last possible position
-                    new_pos = trajectory[i-1][0]
-                    break
+                for i in range(len(trajectory)):
+                    ## Turn the trajectory location into a rect object on the world surface
+                    ## with the same radius as the agent
+                    agent_rect = rotated_sprite.get_rect(center = (trajectory[i][0][0], trajectory[i][0][1]))  
                     
-        return new_pos     
+                    if self.agent.steering == 'discrete' and i==0 and pygame.Rect.colliderect(obj_rect, agent_rect):
+                        break
+                    
+                    ## Check if agent collided with wall
+                    if pygame.Rect.colliderect(obj_rect, agent_rect):
+                        ## register the collision and penalise for it
+                        self.agent.collision=True
+                        ## if the agent will immediately cross the wall, 
+                        ## just rotate the agent, don't move forward
+                        if len(trajectory[:i])==0 or self.agent.steering == 'discrete':
+                            new_pos = self.agent.position
+                            if self.agent.steering == 'discrete':
+                                self.agent.dir_vec = self.old_dir_vec
+                                new_dir = self.agent.direction
+                        ## otherwise, move the agent to the last possible position
+                        else:
+                            new_pos = trajectory[i-1][0]
+                        break      
+            
+            ## Check if the agent's rotation needs to be reduced
+            for obj in list(self.world.contents.keys())[2:]:
+                obj_rect = self.world.contents[str(obj)].rect
+                if self.agent.steering != 'discrete':            
+                    if  old_dir != new_dir:
+                        angles = np.linspace(old_dir, new_dir, 10) 
+                        angles = sorted(angles, key=abs)
+                        
+                        for i in range(len(angles)):
+                            sprite = load_sprite(self.agent.name)
+                            rotate_sprite = pygame.transform.rotate(sprite, angles[i])
+                            
+                            agent_rect = rotate_sprite.get_rect(center = (new_pos[0], new_pos[1]))
+                                
+                            if pygame.Rect.colliderect(obj_rect, agent_rect):
+                                ## register the collision and penalise for it
+                                self.agent.collision=True
+                                if len(angles[:i])==0:
+                                    new_dir = self.agent.direction
+                                else:
+                                    new_dir = angles[i-1]
+                                break
+                            break
+       
+        ## convert direction to Radians
+        rad = np.deg2rad(new_dir)
+        ## convert to vector
+        Vx = np.cos(rad)
+        Vy = np.sin(rad)
+        vec = (Vx, Vy)
+        self.agent.dir_vec = Vector2(vec)
+          
+        return new_pos, new_dir      
 
     def render(self):
         ''' 
@@ -427,6 +590,7 @@ class RatBoxEnv(gym.Env):
 
         ## fetch game objects
         game_object = self._get_game_objects()
+        
     
         for i in range(len(game_object)):
             obj = game_object[i]

@@ -34,10 +34,11 @@ register(
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,50)})
 
-## Random start direction
+########## TMAZE ##########
+## Start facing east
 register(
-    id="RatBox-cwall-v0",
-    entry_point="ratbox.envs:CurveWallRoom",
+    id="RatBox-tmaze-v0",
+    entry_point="ratbox.envs:TMazeRoom",
     reward_threshold=95, 
     max_episode_steps=200, 
-    kwargs={"agent_start_pos": (50,50)})
+    kwargs={"agent_start_pos": (50,300), "agent_start_dir": (1,0)})
