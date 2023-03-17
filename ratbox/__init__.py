@@ -42,3 +42,33 @@ register(
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,300), "agent_start_dir": (1,0)})
+
+########## ENVIRONMENT FILLED WITH OBSTACLES ##########
+## Start facing east
+register(
+    id="RatBox-blocks-v0",
+    entry_point="ratbox.envs:BlockRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4})
+
+register(
+    id="RatBox-blocks-v1",
+    entry_point="ratbox.envs:BlockRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4, "speed": 50})
+
+register(
+    id="RatBox-blocks-v2",
+    entry_point="ratbox.envs:BlockRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4, "speed": 25})
+
+register(
+    id="RatBox-blocks-v3",
+    entry_point="ratbox.envs:BlockRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4, "speed": 6})

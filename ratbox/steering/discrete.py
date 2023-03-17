@@ -64,9 +64,8 @@ class DiscreteModel(SteeringModel):
             new_pos = agent.position + displacement
 
             dir_vec = agent.dir_vec
-        
-        if self.max_speed() == 100:
-            agent.dir_vec = dir_vec
+            
+        agent.dir_vec = dir_vec
             
         new_dir = dir_vec.angle_to(EAST)
 
