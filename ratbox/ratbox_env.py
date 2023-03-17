@@ -336,7 +336,7 @@ class RatBoxEnv(gym.Env):
         ## Penalty for bumping into walls/obstacles
         if self.agent.collision == True:
             #print('Ouch!')
-            self.reward = -0.1
+            self.reward = -0.05
             self.agent.collision = False
 
         ## Reward and done when collide with goal
