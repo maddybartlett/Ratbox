@@ -18,6 +18,8 @@ class BlockRoom(RatBoxEnv):
             agent_start_pos=self.agent_start_pos,
             agent_start_dir=self.agent_start_dir,
             steering=steering,
+            max_reward=100,
+            penalty = 0.5,
             **kwargs)
 
     def _gen_world(self, width, height):
@@ -35,11 +37,9 @@ class BlockRoom(RatBoxEnv):
 
         ## Place blocks in world
         self.world.add_obj(Wall((225,100), 60,60, colorName="yellow", name='block_1', degrees=45))
-        self.world.add_obj(Wall((362.5,312.5), 75,75, colorName="yellow", name='block_2'))
-        self.world.add_obj(Wall((575, 350), 50,50, colorName="yellow", name='block_3', degrees=20))
         self.world.add_obj(Wall((125,500), 50,50, colorName="yellow", name='block_4', degrees = -75))
+        #self.world.add_obj(Wall((250,250), 50,50, colorName="yellow", name='block_middle'))
         
         ## Place balls in the world
-        self.world.add_obj(Ball((100,325), radius=25, colorName="blue", name="ball_1"))
-        self.world.add_obj(Ball((437.5,62.5), radius=37.5, colorName="blue", name="ball_2"))
         self.world.add_obj(Ball((300,550), radius=37.5, colorName="blue", name="ball_3"))
+        self.world.add_obj(Ball((362.5,312.5), radius=37.5, colorName="blue", name='ball_4'))

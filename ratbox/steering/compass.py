@@ -51,6 +51,7 @@ class CompassModel(SteeringModel):
         ## Action weights
         weights = softmax(np.asarray(u)*1)
         
+        
         # Calculate movement vector by calculating the dot product
         ## of the action weights and the direction vectors
         ## (dot product = the sum of the products. i.e. a
@@ -75,7 +76,7 @@ class CompassModel(SteeringModel):
         if self.max_speed() == 100:
             agent.dir_vec = dir_vec
             
-        new_dir = dir_vec.angle_to(EAST)
+        new_dir = agent.dir_vec.angle_to(EAST)
         
         return Vector2(new_pos), new_dir
 

@@ -71,7 +71,7 @@ class EgoModel(SteeringModel):
         if self.max_speed() == 100:
             agent.dir_vec = dir_vec
             
-        new_dir = dir_vec.angle_to(EAST)
+        new_dir = agent.dir_vec.angle_to(EAST)
         
         return Vector2(new_pos), new_dir
 

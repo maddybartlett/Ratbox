@@ -140,11 +140,12 @@ class Dummy_Agent():
     def __init__(self, agent, position, new_dir):
         
         ## Create an agent sprite for collision checking 
-        agent_sprite = load_sprite(agent.name)
+        #agent_sprite = load_sprite(agent.name)
         ## Turn the agent sprite by the selected angle
-        rotated_agent = pygame.transform.rotate(agent_sprite, new_dir)
+        #rotated_agent = pygame.transform.rotate(agent_sprite, new_dir)
+        self.rect = pygame.Rect(position[0]-0.5, position[1]-0.5, 1,1)
         
-        self.rect = rotated_agent.get_rect(center=(position))
+        #self.rect = dummy_rect.get_rect(center=(position))
 
 class Agent():
     '''
@@ -220,6 +221,8 @@ class RatBoxEnv(gym.Env):
                 agent_start_pos: list = None,
                 agent_start_dir: int = None,
                 max_steps: int = 500,
+                max_reward: int = 1,
+                penalty: float = 0.01,
                 steering: Optional[str] = None,
                 render_mode: Optional[str] = None):
         
@@ -229,6 +232,8 @@ class RatBoxEnv(gym.Env):
         self.width = width
         self.height = height
         self.max_steps = max_steps ##max number of time steps per trial
+        self.max_rew = max_reward
+        self.penalty = penalty
 
         ## Initialise render window as None
         self.window = None
@@ -280,7 +285,6 @@ class RatBoxEnv(gym.Env):
     def reset(self, seed=None, options=None):
         '''Reset the environment at the beginning of each learning trial'''
         self.done = False
-        self.max_rew = 1
 
         # Generate a new random grid at the start of each episode
         self._gen_world(self.width, self.height)
@@ -336,7 +340,7 @@ class RatBoxEnv(gym.Env):
         ## Penalty for bumping into walls/obstacles
         if self.agent.collision == True:
             #print('Ouch!')
-            self.reward = -0.05
+            self.reward = -self.penalty
             self.agent.collision = False
 
         ## Reward and done when collide with goal
@@ -396,8 +400,9 @@ class RatBoxEnv(gym.Env):
             #self.agent.dir_vec = Vector2(vec)
             
             new_pos = self._check_speed(object_list, agent_pos, new_dir, action)
+            agent_pos=new_pos
             
-            pos_in_bounds = self._check_bounds(new_pos)
+        pos_in_bounds = self._check_bounds(agent_pos)
 
         return pos_in_bounds, new_dir
     
@@ -474,13 +479,11 @@ class RatBoxEnv(gym.Env):
                 
                 ## Check for collisions with rectangles
                 index = pygame.Rect.collidelist(agent_sprite.rect, object_list[0]) 
-                #if index != -1:
-                #    print(f'I hit {object_list[0][index]}')
-                ## Check for collisions with circles
-                for circ in object_list[1]:
-                    if pygame.sprite.collide_circle(circ, agent_sprite):
-                        #print(f'I hit {circ.name}')
-                        circle_collide = True
+                if len(object_list) > 1:
+                    for circ in object_list[1]:
+                        if pygame.sprite.collide_circle(circ, agent_sprite):
+                            #print(f'I hit {circ.name}')
+                            circle_collide = True
                         
                 if index != -1 or circle_collide == True:
                     ## Reset circle collision

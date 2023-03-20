@@ -16,6 +16,7 @@ class Simple(RatBoxEnv):
             agent_start_pos=self.agent_start_pos,
             agent_start_dir=self.agent_start_dir,
             steering=steering,
+            penalty=0.01,
             **kwargs)
 
     def _gen_world(self, width, height):
