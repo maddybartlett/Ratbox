@@ -4,7 +4,7 @@ class BlockRoom(RatBoxEnv):
     '''
     A room full of square/rectangular blocks the agent has to move around
     '''
-    def __init__(self, width=600, height=600, speed=100, turn=4, steering=None,
+    def __init__(self, width=600, height=600, speed=100000, turn=4, steering=None,
     agent_start_pos = 50, agent_start_dir=50, **kwargs):
 
         self.agent_start_pos = agent_start_pos
@@ -36,10 +36,10 @@ class BlockRoom(RatBoxEnv):
         self.world.add_obj(self.goal)
 
         ## Place blocks in world
-        self.world.add_obj(Wall((225,100), 60,60, colorName="yellow", name='block_1', degrees=45))
-        self.world.add_obj(Wall((125,500), 50,50, colorName="yellow", name='block_4', degrees = -75))
+        self.world.add_obj(Wall((250,100), 75,75, colorName="yellow", name='block_1', degrees=45))
+        self.world.add_obj(Wall((150,450), 75,75, colorName="yellow", name='block_4', degrees = -75))
         #self.world.add_obj(Wall((250,250), 50,50, colorName="yellow", name='block_middle'))
         
         ## Place balls in the world
-        self.world.add_obj(Ball((300,550), radius=37.5, colorName="blue", name="ball_3"))
-        self.world.add_obj(Ball((362.5,312.5), radius=37.5, colorName="blue", name='ball_4'))
+        self.world.add_obj(Ball((350,550), radius=37.5, colorName="blue", name="ball_3"))
+        self.world.add_obj(Ball((450,350), radius=37.5, colorName="blue", name='ball_4'))

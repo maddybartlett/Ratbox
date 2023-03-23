@@ -216,7 +216,7 @@ class RatBoxEnv(gym.Env):
     def __init__(self, 
                 width: int = 600,
                 height: int = 600,
-                speed: int = 100, 
+                speed: int = 100000, 
                 turn: int = None,
                 agent_start_pos: list = None,
                 agent_start_dir: int = None,
@@ -224,7 +224,8 @@ class RatBoxEnv(gym.Env):
                 max_reward: int = 1,
                 penalty: float = 0.01,
                 steering: Optional[str] = None,
-                render_mode: Optional[str] = None):
+                render_mode: Optional[str] = None,
+                dt: float = 0.001,):
         
 
         self.name = "RatBox"
@@ -245,9 +246,8 @@ class RatBoxEnv(gym.Env):
         ## Agent mobility
         self.turn = turn ##number of times it can turn in a circle (only dor discrete actions)
         self.steering = steering ##steering model string id
-            
         
-        self.speed = speed
+        self.speed = dt*speed # Speed in pixels per timestep
         
         if self.turn is not None:
             self.rotation = 360/self.turn ##degrees rotated per timestep when using discrete action space

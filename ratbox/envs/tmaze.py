@@ -4,7 +4,7 @@ class TMazeRoom(RatBoxEnv):
     '''
     Maze room that is solvable by the discrete agent
     '''
-    def __init__(self, width=600, height=600, speed=100, turn=4, steering=None,
+    def __init__(self, width=600, height=600, speed=100000, turn=4, steering=None,
     agent_start_pos = 50, agent_start_dir=50, **kwargs):
 
         self.agent_start_pos = agent_start_pos
