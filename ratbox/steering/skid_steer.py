@@ -15,6 +15,7 @@ class SkidSteer(SteeringModel):
     Assuming a z-up coordinate system
     '''
     def __init__(self): 
+        self.turn_speed = 20
         super().__init__(state_dim=3, command_dim=2, max_speed=100)
 
         self._action_space = spaces.Box(low=np.array([-1, -1], dtype=np.float32), 
@@ -30,7 +31,7 @@ class SkidSteer(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u, dt=1, x=None):
+    def step(self, agent, u, x=None):
         
         ## load agent sprite and get width
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..', 'utils'))
@@ -52,15 +53,15 @@ class SkidSteer(SteeringModel):
         ## calculate velocity as half the sum of the speeds of the left and right tracks
         vel = ((u[0] + u[1]) / 2) * self.max_speed()
         ## calculate rotation as the diff between track speeds divided by the agent width
-        dtheta = (u[1] - u[0]) / self._width
-        
+        dtheta = ((u[1] - u[0]) / self._width) * self.turn_speed
+  
         ## Calculate displacement
         dx = np.zeros(x.shape)
         dx[:2] = vel * np.array([np.sin(x[2]), np.cos(x[2])])
         dx[2] = dtheta
         
         ## Calculate new location (x, y)
-        new_state = x + dx * dt
+        new_state = x + dx
         new_pos = list(new_state[:2])
         
         ## Get agent's new direction/heading

@@ -103,8 +103,11 @@ class ConvertUnicycleWrapper(Wrapper):
         
         return np.array([v, np.deg2rad(theta)])  
     
-    
-    
+Full_Forward = [1,1]
+Left_Turn = [0,1]
+Right_Turn=[1,0]
+
+SKID_ACTIONS = [Full_Forward, Left_Turn, Right_Turn]
     
 class ConvertSkidWrapper(Wrapper):
     '''
@@ -133,16 +136,6 @@ class ConvertSkidWrapper(Wrapper):
     def __init__(self, env):
         
         self.env = env
-        
-        self._action_space = spaces.Box(low=np.array([-np.inf,-np.inf,-np.inf,-np.inf], dtype=np.float32), 
-                                        high=np.array([np.inf,np.inf,np.inf,np.inf], dtype=np.float32)
-                                       )
-        
-        self.env.steering_model.command_dim = 4
-        self.env.steering_model.action_space = self.action_space
-    
-    def action_space(self):
-        return self._action_space
     
     def step(self, action):
         action = self._get_action(action)
@@ -186,22 +179,13 @@ class ConvertSkidWrapper(Wrapper):
         
         '''
         ## check action and state have correct number of elements
-        assert len(u) == 4, f'Expected 4 action commands, got {len(u)}'
+        assert len(u) == 3, f'Expected 4 action commands, got {len(u)}'
         
         ## Action weights
         weights = softmax(np.asarray(u)*1)
         
-        ## Speed for each track
-        rightward = np.sum(weights[:3])
-        leftward = np.sum([weights[0], weights[1], weights[3]])
-
-        ## normalise between -1 and 1
-        def normalise(x):
-            return 2*((x - 0) / ( 1 - 0 ))-1
-            
-        ## normalised speed for each track
-        right_speed = normalise(rightward)
-        left_speed = normalise(leftward)
+        ## Choose an action
+        action = SKID_ACTIONS[weights.argmax()]
         
-        return np.array([right_speed, left_speed])
+        return action
     
