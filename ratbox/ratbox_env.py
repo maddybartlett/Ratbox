@@ -454,7 +454,7 @@ class RatBoxEnv(gym.Env):
         ## Calculate distance from start to target location
         distance = ((old_pos[0] - new_pos[0])**2 + (old_pos[1] - new_pos[1])**2)**0.5
         ## Create a list of speeds between 0 and speed needed to reach target location
-        speeds = np.linspace(0, distance, 10) 
+        speeds = np.linspace(0, self.speed, 10) 
         
         if discrete_forward == True or self.agent.steering != "discrete":
             ## Create a list of locations between start and target
