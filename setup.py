@@ -8,7 +8,7 @@ def read(fname):
 setup(
     
             name='ratbox', 
-            version='0.0.1',  
+            version='1.0.0',  
             author = 'Maddy Bartlett, Nicole Dumont, Michael Furlong, Terry Stewart', 
             packages=find_packages(),
             include_package_data=True,
