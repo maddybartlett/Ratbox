@@ -4,7 +4,7 @@ from gymnasium.envs.registration import register
 ## Start facing east
 register(
     id="RatBox-empty-v0",
-    entry_point="ratbox.envs:Simple",
+    entry_point="ratbox.envs:Empty",
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"turn": 4, "agent_start_pos": (50,50), "agent_start_dir": (1,0)})
@@ -12,7 +12,7 @@ register(
 ## Random start direction
 register(
     id="RatBox-empty-randomDir-v0",
-    entry_point="ratbox.envs:Simple",
+    entry_point="ratbox.envs:Empty",
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"turn": 4, "agent_start_pos": (50,50)})
@@ -34,15 +34,6 @@ register(
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,50)})
 
-########## TMAZE ##########
-## Start facing east
-register(
-    id="RatBox-tmaze-v0",
-    entry_point="ratbox.envs:TMazeRoom",
-    reward_threshold=95, 
-    max_episode_steps=200, 
-    kwargs={"agent_start_pos": (50,300), "agent_start_dir": (1,0)})
-
 ########## ENVIRONMENT FILLED WITH OBSTACLES ##########
 ## Start facing east
 register(
@@ -51,3 +42,10 @@ register(
     reward_threshold=95, 
     max_episode_steps=200, 
     kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4})
+
+register(
+    id="RatBox-blocks-v1",
+    entry_point="ratbox.envs:BlockRoom",
+    reward_threshold=95, 
+    max_episode_steps=200, 
+    kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4, "speed": 50000,})
