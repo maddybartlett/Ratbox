@@ -1,7 +1,7 @@
 from ratbox.ratbox_env import RatBoxEnv, World, Goal, Agent
 import random
 
-class Simple(RatBoxEnv):
+class Empty(RatBoxEnv):
     def __init__(self, width=600, height=600, speed=100000, turn=4, steering=None,
     agent_start_pos=None, agent_start_dir=None, **kwargs):
 
