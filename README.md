@@ -22,7 +22,7 @@ The most basic environment is an empty 2D world where the agent starts in the to
 The goal is reached once the agent's center is within 50 pixels of the goal location (550, 550). 
 
 <p>
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/emptyroom.pdf" width="450"/>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/emptyroom.png" width="450"/>
 </p>
 
 There are a choice of steering models to control how the agent moves through the environment.
