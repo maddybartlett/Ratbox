@@ -1,4 +1,3 @@
-from ratbox.envs.simple import Simple
+from ratbox.envs.empty import Empty
 from ratbox.envs.wall import WallRoom
-from ratbox.envs.tmaze import TMazeRoom
 from ratbox.envs.obstacles import BlockRoom
