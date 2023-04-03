@@ -14,22 +14,55 @@ Install package by running: `pip install .`
 ## Environments
 
 The environments are simple 2D worlds, 600x600 pixels, that the agent (rat) must navigate through in order to reach a goal (cheese).
+The agent's state at any time is defined in terms of its x,y coordinate location in the world and the direction it's facing. 
 
 ### Empty Room
 
 The most basic environment is an empty 2D world where the agent starts in the top left-hand corner, facing East, and has to find the goal located in the bottom right-hand corner. 
 
 The goal is reached once the agent's center is within 50 pixels of the goal location (550, 550). 
+The agent receives a reward of $1$ once the goal is reach, discounted according to the number of steps the agent took to get there. 
 
-<p>
-<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/emptyroom.png" width="450"/>
+<p align="center">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/emptyroom.png" width="300"/>
 </p>
 
-There are a choice of steering models to control how the agent moves through the environment.
+```
+env = gym.make("RatBox-empty-v0", render_mode = "rgb_array", steering = "discrete")
+``` 
 
-The agent's state at any time is defined in terms of its x,y coordinate location in the world and the direction it's facing. 
+### Wall Room
+
+The wall room environment contains a single wall which blocks the most direct route to the goal. 
+The agent receives a reward of $1$ once the goal is reach, discounted according to the number of steps the agent took to get there. 
+The agent receives a penalty of $-0.01$ if it bumps into the wall. 
+
+<p align="center">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/wallroom.png" width="300"/>
+</p>
+
+```
+env = gym.make("RatBox-wall-v0", render_mode = "rgb_array", steering = "discrete")
+``` 
+
+### Blocks Room
+
+The final environment currently available is the blocks room environment. This environment contains 4 obstacles (two square and two circular 'blocks'). 
+The agent receives a reward of $100$ once the goal is reach, discounted according to the number of steps the agent took to get there. 
+The agent receives a penalty of $-0.5$ if it bumps into any of the obstacles. 
+
+<p align="center">
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/blocksroom.png" width="300"/>
+</p>
+
+```
+env = gym.make("RatBox-blocks-v0", render_mode = "rgb_array", steering = "discrete")
+``` 
+
 
 ## Steering Models
+
+There are a choice of steering models to control how the agent moves through the environment.
 
 ### Discrete
 
