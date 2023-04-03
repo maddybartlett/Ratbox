@@ -13,9 +13,19 @@ Install package by running: `pip install .`
 
 ## Environments
 
-The environments are simple 2D worlds, 600x600 pixels, that the agent (the rat) must navigate through in order to reach a goal (the cheese).
+The environments are simple 2D worlds, 600x600 pixels, that the agent (rat) must navigate through in order to reach a goal (cheese).
 
-The space can be defined as either discrete or continuous by selecting the appropriate steering model.
+### Empty Room
+
+The most basic environment is an empty 2D world where the agent starts in the top left-hand corner, facing East, and has to find the goal located in the bottom right-hand corner. 
+
+The goal is reached once the agent's center is within 50 pixels of the goal location (550, 550). 
+
+<p>
+<img src="https://github.com/maddybartlett/Ratbox/blob/main/gifs/emptyroom.pdf" width="450"/>
+</p>
+
+There are a choice of steering models to control how the agent moves through the environment.
 
 The agent's state at any time is defined in terms of its x,y coordinate location in the world and the direction it's facing. 
 
