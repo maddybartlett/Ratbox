@@ -84,7 +84,7 @@ class Wall():
     '''
     Stationary w x h pixel obstacle in the environment, through which the agent cannot pass
     '''
-    def __init__(self, position, w=10, h=10, colorName="grey", name='wall', degrees=0):
+    def __init__(self, position, w=10, h=10, colorName="black", name='wall', degrees=0):
         self.rotated = True
         self.direction = degrees
         self.position = position # x,y location of the centre of the wall
@@ -461,7 +461,7 @@ class RatBoxEnv(gym.Env):
             locations=[]
             for speed in speeds:
                 self.agent.travel._max_speed = speed
-                locations.append(self.agent.travel.step(self.agent, action))
+                locations.append(self.agent.travel.step(self.agent, action, testing=True))
                     
             ## Reset the agent's speed 
             self.agent.travel._max_speed = self.speed

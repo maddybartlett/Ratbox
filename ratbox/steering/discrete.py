@@ -32,7 +32,7 @@ class DiscreteModel(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u):
+    def step(self, agent, u, testing=False):
         
         assert len(u) == 3, f'Expected 3 action commands, got {len(u)}'
         

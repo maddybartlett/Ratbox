@@ -27,7 +27,7 @@ class CompassModel(SteeringModel):
         self._state_dim = 3
         self._command_dim = 4
         
-        super().__init__(state_dim=3, command_dim=4, max_speed=100)
+        super().__init__(state_dim=3, command_dim=4)
         
         self._action_space = spaces.Box(low=np.array([-np.inf,-np.inf,-np.inf,-np.inf], dtype=np.float32), 
                                         high=np.array([np.inf,np.inf,np.inf,np.inf], dtype=np.float32)
@@ -44,7 +44,7 @@ class CompassModel(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u):
+    def step(self, agent, u, testing=False):
 
         assert len(u) == self._command_dim, f'Expected 4 action commands, got {len(u)}'
         
@@ -62,6 +62,7 @@ class CompassModel(SteeringModel):
         ## get the final displacement vector
         displacement = move_vec * self.max_speed()
         
+        
         ## Move the agent
         new_pos = agent.position + displacement
         
@@ -73,7 +74,7 @@ class CompassModel(SteeringModel):
             dir_vec = move_vec/norm
             dir_vec = Vector2(tuple(dir_vec))
 
-        if self.max_speed() == 100:
+        if testing == False:
             agent.dir_vec = dir_vec
             
         new_dir = agent.dir_vec.angle_to(EAST)

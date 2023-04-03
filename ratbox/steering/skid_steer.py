@@ -16,7 +16,7 @@ class SkidSteer(SteeringModel):
     '''
     def __init__(self): 
         self.turn_speed = 20
-        super().__init__(state_dim=3, command_dim=2, max_speed=100)
+        super().__init__(state_dim=3, command_dim=2)
 
         self._action_space = spaces.Box(low=np.array([-1, -1], dtype=np.float32), 
                                         high=np.array([1, 1], dtype=np.float32)
@@ -31,7 +31,7 @@ class SkidSteer(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u, x=None):
+    def step(self, agent, u, x=None, testing=False):
         
         ## load agent sprite and get width
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..', 'utils'))

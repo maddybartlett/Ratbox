@@ -30,7 +30,7 @@ class KinematicUnicycle(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u, dt=1, x=None):
+    def step(self, agent, u, dt=1, x=None, testing=False):
 
         ## agent's state retrieved from agent class unless defined
         if x == None:

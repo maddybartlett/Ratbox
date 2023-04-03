@@ -34,7 +34,7 @@ class EgoModel(SteeringModel):
     def observation_space(self):
         return self._observation_space
     
-    def step(self, agent, u):
+    def step(self, agent, u, testing=False):
         
         assert len(u) == 4, f'Expected 2 action commands, got {len(u)}'
         
@@ -68,7 +68,7 @@ class EgoModel(SteeringModel):
             dir_vec = move_vec/norm
             dir_vec = Vector2(tuple(dir_vec))
         
-        if self.max_speed() == 100:
+        if testing == False:
             agent.dir_vec = dir_vec
             
         new_dir = agent.dir_vec.angle_to(EAST)
