@@ -4,7 +4,7 @@ The Ratbox library contains a collection of optionally discrete and continuous e
 The environments follow the Gymnasium standard API. 
 
 ## Installation
-** Temporary ** <br>
+
 To install Ratbox first clone or download this repository. Place it in a directory of your choice on your machine. Open a command prompt or terminal window and navigate to 
 the Ratbox directory. <br>
 e.g. `cd C:\Users\user\anaconda3\Lib\site-packages\Ratbox` <br>
