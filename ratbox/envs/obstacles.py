@@ -38,7 +38,6 @@ class BlockRoom(RatBoxEnv):
         ## Place blocks in world
         self.world.add_obj(Wall((250,100), 75,75, colorName="yellow", name='block_1', degrees=45))
         self.world.add_obj(Wall((150,450), 75,75, colorName="yellow", name='block_4', degrees = -75))
-        #self.world.add_obj(Wall((250,250), 50,50, colorName="yellow", name='block_middle'))
         
         ## Place balls in the world
         self.world.add_obj(Ball((350,550), radius=37.5, colorName="blue", name="ball_3"))
