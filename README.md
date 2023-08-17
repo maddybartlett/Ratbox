@@ -1,7 +1,7 @@
 # Ratbox
 
 The Ratbox library contains a collection of optionally discrete and continuous environments to conduct research on Reinforcement Learning. 
-The environments follow the Gymnasium standard API and was inspired by [MiniGrid](https://github.com/Farama-Foundation/Minigrid/tree/55beb586d65328702c6d9f29d8ad9cdba2db6a69) by Farama Foundation, licensed under Apache 2.0. 
+The environments follow the Gymnasium standard API and were inspired by [MiniGrid](https://github.com/Farama-Foundation/Minigrid/tree/55beb586d65328702c6d9f29d8ad9cdba2db6a69) by Farama Foundation, licensed under Apache 2.0. 
 
 ## Installation
 
