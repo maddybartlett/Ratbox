@@ -217,3 +217,16 @@ Both of these values can range between -1 and 1.
 Speed is calculated as half the sum of the speeds of the left and right tracks. Rotation is calculated as the difference between track speeds divided by the width of the agent.
 
 A wrapper is available for converting from the 4 action primitives to speed and direction (ConvertSkidWrapper).
+
+## Citation
+
+To cite this repository please cite the companion paper:
+
+```
+@misc{bartlett2023improving,
+    title = {Improving Reinforcement Learning with Biologically Motivated Continuous State Representations},
+    author = {Bartlett, Madeleine and Simone, Kathryn and Dumont, Nicole Sandra-Yaffa and Furlong, P Michael and Eliasmith, Chris and Orchard, Jeff and Stewart, Terrence C},
+    howpublished = {\url{https://mathpsych.org/presentation/1221}},
+    year = {2023},
+}
+```
