@@ -17,9 +17,9 @@ setup(
             },
             
             install_requires=[
-                'Gymnasium==0.26.3', 
-                'numpy==1.22.4', 
-                'pygame==2.1.0', 
-                'scipy==1.7.3', 
-                'setuptools==67.1.0', 
+                'Gymnasium', 
+                'numpy', 
+                'pygame', 
+                'scipy', 
+                'setuptools', 
 ] )
