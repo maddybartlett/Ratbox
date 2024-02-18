@@ -1,7 +1,7 @@
 # Ratbox
 
 The Ratbox library contains a collection of optionally discrete and continuous environments to conduct research on Reinforcement Learning. 
-The environments follow the Gymnasium standard API. 
+The environments follow the Gymnasium standard API and were inspired by [MiniGrid](https://github.com/Farama-Foundation/Minigrid/tree/55beb586d65328702c6d9f29d8ad9cdba2db6a69) by Farama Foundation, licensed under Apache 2.0. 
 
 ## Installation
 
@@ -217,3 +217,16 @@ Both of these values can range between -1 and 1.
 Speed is calculated as half the sum of the speeds of the left and right tracks. Rotation is calculated as the difference between track speeds divided by the width of the agent.
 
 A wrapper is available for converting from the 4 action primitives to speed and direction (ConvertSkidWrapper).
+
+## Citation
+
+To cite this repository please cite the companion paper:
+
+```
+@misc{bartlett2023improving,
+    title = {Improving Reinforcement Learning with Biologically Motivated Continuous State Representations},
+    author = {Bartlett, Madeleine and Simone, Kathryn and Dumont, Nicole Sandra-Yaffa and Furlong, P Michael and Eliasmith, Chris and Orchard, Jeff and Stewart, Terrence C},
+    howpublished = {\url{https://mathpsych.org/presentation/1221}},
+    year = {2023},
+}
+```

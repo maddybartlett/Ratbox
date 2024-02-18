@@ -44,23 +44,6 @@ WEST = Vector2(-1, 0)
 
 DIRECTIONS = [NORTH, SOUTH, EAST, WEST]
 
-## Create game object
-#class WorldObject:
-#    '''
-#    Parent class for objects placed in the environment/world
-#    e.g. goal and obstacles like walls
-#    Does not include agent object
-#    '''
-#    def __init__(self, position, name=None): 
-        ## Initialise position and sprite name (i.e. filename for png image)
-#        self.position = Vector2(position)
-#        self.name = name
-
-#    def draw(self, surface):
-        ## Load sprite and retrieve radius. Do not draw to surface
-#        self.image = load_sprite(self.name)
-#        self.radius = self.image.get_width()/2
-
 class Goal():
     '''
     Goal object 
@@ -387,17 +370,6 @@ class RatBoxEnv(gym.Env):
             object_list = [rect_list]
             if len(circle_list) > 0:
                 object_list.append(circle_list)
-            
-            #new_dir = agent_dir   
-            #new_dir = self._check_turn(object_list, agent_dir)
-            
-            ## convert direction to Radians
-            #rad = np.deg2rad(new_dir)
-            ## convert to vector
-            #Vx = np.cos(rad)
-            #Vy = np.sin(rad)
-            #vec = (Vx, Vy)
-            #self.agent.dir_vec = Vector2(vec)
             
             new_pos = self._check_speed(object_list, agent_pos, new_dir, action)
             agent_pos=new_pos
