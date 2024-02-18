@@ -179,7 +179,7 @@ class ConvertSkidWrapper(Wrapper):
         
         '''
         ## check action and state have correct number of elements
-        assert len(u) == 3, f'Expected 4 action commands, got {len(u)}'
+        assert len(u) == 4, f'Expected 4 action commands, got {len(u)}'
         
         ## Action weights
         weights = softmax(np.asarray(u)*1)
