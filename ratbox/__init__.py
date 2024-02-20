@@ -44,7 +44,7 @@ register(
     kwargs={"agent_start_pos": (50,50), "agent_start_dir": (1,0), "turn": 4})
 
 register(
-    id="RatBox-blocks-v1",
+    id="RatBox-blocksSlow-v0",
     entry_point="ratbox.envs:BlockRoom",
     reward_threshold=95, 
     max_episode_steps=200, 
